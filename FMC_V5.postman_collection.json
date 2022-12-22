@@ -1,0 +1,565 @@
+{
+	"info": {
+		"_postman_id": "aeb3dbd9-5fa9-4ce0-b711-c8dd45672e65",
+		"name": "FMC Final Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3090685"
+	},
+	"item": [
+		{
+			"name": "User Sign Up",
+			"item": [
+				{
+					"name": "Create-token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"token\", responseJson.accessToken);",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/fmc/token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fmc",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "email-signup",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const email = pm.variables.replaceIn(\"{{$randomEmail}}\")",
+									"pm.collectionVariables.set(\"email\", email);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"otp\", responseJson.content.otp);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email_id\":\"{{email}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/fmc/email-signup-automation",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fmc",
+								"email-signup-automation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify-otp",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const fullName = \"{{$randomFullName}}\";",
+									"const phoneNumber = \"{{$$randomPhoneNumber}}\";",
+									"const password = \"fmcApp\";",
+									"",
+									"pm.collectionVariables.set(\"fullName\", fullName);",
+									"pm.collectionVariables.set(\"phoneNumber\", phoneNumber);",
+									"pm.collectionVariables.set(\"password\", password);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"pm.collectionVariables.set(\"userId\", responseJson.content.userId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email_id\":\"{{email}}\",\r\n    \"full_name\":\"{{$randomFullName}}\",\r\n    \"phone_number\":\"{{$randomPhoneNumber}}\",\r\n    \"password\":\"{{password}}\",\r\n    \"otp\":\"{{otp}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/fmc/verify-otp",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fmc",
+								"verify-otp"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email_id\":\"{{email}}\",\r\n    \"password\":\"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/fmc/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fmc",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Add/Delete Report",
+			"item": [
+				{
+					"name": "add-report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json()",
+									"pm.collectionVariables.set(\"content\", response.content);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reporter_details\": {\r\n        \"request_id\": \"{{$randomUUID}}\",\r\n        \"user_id\": {{userId}},\r\n        \"report_date\": \"2022-09-01T01:37:30Z\",\r\n        \"reporter_fullname\": \"Samrat Kohli\",\r\n        \"reporter_age\": 40,\r\n        \"reporter_gender\": \"Male\",\r\n        \"reporter_relation\": \"Father\",\r\n        \"parenting_type\": \"Own Child\",\r\n        \"contact_address_type\": \"Home\",\r\n        \"contact_address_line_1\": \"Paud Road\",\r\n        \"contact_address_line_2\": \"Kothrud\",\r\n        \"pincode\": \"411058\",\r\n        \"country\": \"India\",\r\n        \"primary_country_code\": \"+91\",\r\n        \"primary_contact_number\": \"1234567890\",\r\n        \"secondary_country_code\": \"+91\",\r\n        \"secondary_contact_number\": \"1234567891\",\r\n        \"communication_language\": \"English\",\r\n        \"status\": \"INCOMPLETE\"\r\n    },\r\n    \"child_details\": {\r\n        \"fullname\": \"Naira Kohli\",\r\n        \"age\": 10,\r\n        \"gender\": \"Female\",\r\n        \"height\": \"5ft\",\r\n        \"weight\": \"45kg\",\r\n        \"complexion\": \"fair\",\r\n        \"clothing\": \"Red top and black pant\",\r\n        \"birth_signs\": \"mark on right hand\",\r\n        \"other_details\": \"wears spectacles\",\r\n        \"image_file_key\": null,\r\n        \"nickname\":\"Kara\"\r\n    },\r\n    \"incident_details\": {\r\n        \"incident_date\": \"2022-08-15T10:37:30Z\",\r\n        \"incident_brief\": \"Child went missing near the school\",\r\n        \"location\": \"Pune\",\r\n        \"landmark_signs\": \"Near Kasba peth\",\r\n        \"nearby_police_station\": \"City Police station\",\r\n        \"nearby_NGO\": \"Samruddhi NGO\",\r\n        \"allow_connect_police_NGO\": true,\r\n        \"self_verification\": true,\r\n        \"community_terms\": true\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/fmc/reports",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fmc",
+								"reports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-report",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/fmc/reports/{{userId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fmc",
+								"reports",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-report",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/fmc/reports/{{content}}/users/{{userId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fmc",
+								"reports",
+								"{{content}}",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "File Upload/Download",
+			"item": [
+				{
+					"name": "image-upload",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json()",
+									"pm.collectionVariables.set(\"file_key\", response.image_file_key);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/smita.shewale/Documents/cdd.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/file/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"file",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "image-download",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/file/{{file_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"file",
+								"{{file_key}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Paaword Reset",
+			"item": [
+				{
+					"name": "reset-password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email_id\":\"{{email}}\",\r\n    \"password\":\"{{password}}2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/fmc/reset-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fmc",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Delete",
+			"item": [
+				{
+					"name": "delete-user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email_id\":\"{{email}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/fmc/delete-user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"fmc",
+								"delete-user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "otp",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "fullName",
+			"value": ""
+		},
+		{
+			"key": "phoneNumber",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "content",
+			"value": ""
+		},
+		{
+			"key": "file_key",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "base_url",
+			"value": "http://Fmc-env.eba-5akrwvvr.us-east-1.elasticbeanstalk.com"
+		}
+	]
+}
